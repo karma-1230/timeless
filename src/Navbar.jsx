@@ -17,25 +17,10 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark fixed-top" style={navStyle}>
             <div className="container-fluid">
-                {/* Brand */}
                 <a className="navbar-brand" href="#" style={{ fontSize: "1.8rem", letterSpacing: "2px" }}>
                     TIMELESS
                 </a>
 
-                {/* Toggler (for mobile) */}
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-
-                {/* Links */}
                 <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
