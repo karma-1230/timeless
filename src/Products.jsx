@@ -1,66 +1,84 @@
-import { useRef } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCoverflow, Autoplay } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/effect-coverflow'
 
-const products = [
-    { id: 1, name: "Product 1", image: "/images/hoodie-1.jpg" },
-    { id: 2, name: "Product 2", image: "/images/hoodie-2.jpg" },
-    { id: 3, name: "Product 3", image: "/images/hoodie-3.jpg" },
-    { id: 4, name: "Product 4", image: "/images/hoodie-4.jpg" },
-]
+export default function Products() {
+  const products = [
+    {
+      id: 1,
+      name: "VORTEX BAGGY PANTS",
+      image: "/images/hoodie-1.jpg",
+      originalPrice: "Rs 5,999.00",
+      salePrice: "Rs 4,999.00",
+      discount: "28% OFF",
+      rating: 5,
+      reviews: 4,
+    },
+    {
+      id: 2,
+      name: "KARVAAN COLOSSUS JORTS",
+      image: "/images/hoodie-2.jpg",
+      originalPrice: "Rs 4,999.00",
+      salePrice: "Rs 3,999.00",
+      discount: "20% OFF",
+      rating: 5,
+      reviews: 3,
+    },
+    {
+      id: 3,
+      name: "THE NINTH SEAL",
+      image: "/images/hoodie-4.jpg",
+      originalPrice: "Rs 3,299.00",
+      salePrice: "Rs 2,699.00",
+      discount: "18% OFF",
+      rating: 5,
+      reviews: 2,
+    },
+  ]
 
-function Products() {
-    const swiperRef = useRef(null)
+  return (
+    <>
+      <div className="container-fluid bg-light py-5">
+        <div className="container">
+          <div className="text-center mb-5">
+            <h1 className="display-4 fw-bold text-dark mb-3">CULT OF CYPHER VOLUME I IS LIVE NOW!</h1>
+            <p className="lead text-muted">DON'T SLEEP ON THIS DROP. COP IT BEFORE THE SELL-OUT IS REAL</p>
+          </div>
 
-    return (
-        <div className="container my-5">
-            <h2 className="text-center mb-4" style={{ fontSize: "70px", color: 'white' }}>Our Products</h2>
-            <Swiper
-                effect={'coverflow'}
-                grabCursor={true}
-                centeredSlides={true}
-                slidesPerView={'auto'}
-                coverflowEffect={{
-                    rotate: 50,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows: true,
-                }}
-                onSwiper={(swiper) => {
-                    swiperRef.current = swiper
-                }}
-                autoplay={{
-                    delay: 3000,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true,
-                }}
-                modules={[EffectCoverflow, Autoplay]}
-                className="mySwiper"
-            >
-                {products.map((product, index) => (
-                    <SwiperSlide
-                        key={product.id}
-                        style={{ width: "300px" }}
-                        onClick={() => swiperRef.current?.slideTo(index)}
-                    >
-                        <div className="card shadow-lg rounded-lg overflow-hidden">
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="card-img-top"
-                            />
-                            <div className="card-body text-center">
-                                <h5 className="card-title">{product.name}</h5>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
+          <div className="row g-4 justify-content-center">
+            {products.map((product) => (
+              <div key={product.id} className="col-lg-4 col-md-6">
+                <div className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                  <div className="position-relative">
+                    <img
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      className="card-img-top"
+                      style={{ height: "300px", objectFit: "cover" }}
+                    />
+                    <span className="badge bg-dark position-absolute top-0 start-0 m-3 px-3 py-2">
+                      {product.discount}
+                    </span>
+                  </div>
+
+                  <div className="card-body d-flex flex-column p-4">
+                    <h5 className="card-title fw-bold text-uppercase mb-3">{product.name}</h5>
+
+                    <div className="d-flex align-items-center mb-3">
+                      <div className="me-2">{'★'.repeat(product.rating)}</div>
+                      <small className="text-muted">({product.reviews})</small>
+                    </div>
+
+                    <div className="mb-4">
+                      <span className="text-muted text-decoration-line-through me-2">{product.originalPrice}</span>
+                      <span className="h5 fw-bold text-dark">{product.salePrice}</span>
+                    </div>
+
+                    <button className="btn btn-outline-dark btn-lg mt-auto rounded-pill">Choose options</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-    )
+      </div>
+    </>
+  )
 }
-
-export default Products
