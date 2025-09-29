@@ -1,4 +1,3 @@
-
 export default function Products() {
   const products = [
     {
@@ -31,54 +30,74 @@ export default function Products() {
       rating: 5,
       reviews: 2,
     },
-  ]
+  ];
 
   return (
-    <>
-      <div className="container-fluid bg-light py-5">
-        <div className="container">
-          <div className="text-center mb-5">
-            <h1 className="display-4 fw-bold text-dark mb-3">CULT OF CYPHER VOLUME I IS LIVE NOW!</h1>
-            <p className="lead text-muted">DON'T SLEEP ON THIS DROP. COP IT BEFORE THE SELL-OUT IS REAL</p>
-          </div>
+    <section className="bg-light py-5">
+      <div className="container">
+        {/* Section Header */}
+        <div className="text-center mb-5">
+          <h1 className="display-4 fw-bold text-dark mb-3">
+            CULT OF CYPHER VOLUME I IS LIVE NOW!
+          </h1>
+          <p className="lead text-muted">
+            DON'T SLEEP ON THIS DROP. COP IT BEFORE THE SELL-OUT IS REAL
+          </p>
+        </div>
 
-          <div className="row g-4 justify-content-center">
-            {products.map((product) => (
-              <div key={product.id} className="col-lg-4 col-md-6">
-                <div className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                  <div className="position-relative">
-                    <img
-                      src={product.image || "/placeholder.svg"}
-                      alt={product.name}
-                      className="card-img-top"
-                      style={{ height: "300px", objectFit: "cover" }}
-                    />
-                    <span className="badge bg-dark position-absolute top-0 start-0 m-3 px-3 py-2">
-                      {product.discount}
+        {/* Product Grid */}
+        <div className="row g-4 justify-content-center">
+          {products.map((product) => (
+            <div key={product.id} className="col-6 col-md-4">
+              <div className="card shadow-sm border-0 rounded-4 h-100 d-flex flex-column">
+                {/* Product Image */}
+                <div className="position-relative">
+                  <img
+                    src={product.image || "/placeholder.svg"}
+                    alt={product.name}
+                    className="card-img-top img-fluid"
+                    style={{ height: "300px", objectFit: "cover" }}
+                  />
+                  <span className="badge bg-dark position-absolute top-0 start-0 m-3 px-3 py-2">
+                    {product.discount}
+                  </span>
+                </div>
+
+                {/* Product Details */}
+                <div className="card-body d-flex flex-column p-4">
+                  <h5 className="card-title fw-bold text-uppercase mb-3">
+                    {product.name}
+                  </h5>
+
+                  {/* Rating */}
+                  <div className="d-flex align-items-center mb-3">
+                    <div className="me-2 text-warning">
+                      {"★".repeat(product.rating)}
+                      {"☆".repeat(5 - product.rating)}
+                    </div>
+                    <small className="text-muted">({product.reviews})</small>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mb-4">
+                    <span className="text-muted text-decoration-line-through me-2 d-block">
+                      {product.originalPrice}
+                    </span>
+                    <span className="h5 fw-bold text-dark">
+                      {product.salePrice}
                     </span>
                   </div>
 
-                  <div className="card-body d-flex flex-column p-4">
-                    <h5 className="card-title fw-bold text-uppercase mb-3">{product.name}</h5>
-
-                    <div className="d-flex align-items-center mb-3">
-                      <div className="me-2">{'★'.repeat(product.rating)}</div>
-                      <small className="text-muted">({product.reviews})</small>
-                    </div>
-
-                    <div className="mb-4">
-                      <span className="text-muted text-decoration-line-through me-2">{product.originalPrice}</span>
-                      <span className="h5 fw-bold text-dark">{product.salePrice}</span>
-                    </div>
-
-                    <button className="btn btn-outline-dark btn-lg mt-auto rounded-pill">Choose options</button>
-                  </div>
+                  {/* Button */}
+                  <button className="btn btn-outline-dark btn-lg mt-auto rounded-pill">
+                    Choose options
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
-    </>
-  )
+    </section>
+  );
 }
