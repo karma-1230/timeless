@@ -1,7 +1,6 @@
 function Navbar() {
   return (
     <div>
-      {/* Top black bar */}
       <div className="bg-black text-white py-1 position-relative overflow-hidden">
         <div className="d-flex align-items-center justify-content-center">
           <i className="bi bi-facebook mx-2"></i>
@@ -21,10 +20,8 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Second row: nav links with hamburger */}
       <nav className="navbar navbar-expand-lg bg-white border-bottom">
         <div className="container">
-          {/* Hamburger for small screens */}
           <button
             className="navbar-toggler mx-auto"
             type="button"

@@ -1,8 +1,8 @@
-import Colss from './Colss'
+import Authentication from './Authentication'
 import Landingpage from './landingpage'
 function App() {
   return <>
-    <Landingpage />
+    <Authentication />
   </>
 }
 
