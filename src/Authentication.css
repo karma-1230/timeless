@@ -1,288 +1,64 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
-
-a {
-    text-decoration: none;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.dark-signup-container {
     min-height: 100vh;
-    background-image: url("./images/background.webp");
-    background-size: cover;
-}
-
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-}
-
-.navigation a {
-    position: relative;
-    font-size: 1.1em;
-    color: white;
-    font-weight: 500;
-    margin-left: 40px;
-}
-
-.navigation a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 100%;
-    height: 3px;
-    background: white;
-    border-radius: 5px;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform .5s;
-}
-
-.navigation a:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-}
-
-.navigation .btnlogin {
-    width: 130px;
-    height: 50px;
-    background: transparent;
-    border: 2px solid white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.1em;
-    color: white;
-    font-weight: 500;
-    margin-left: 40px;
-}
-
-.navigation .btnlogin:hover {
-    background-color: black;
-    color: white;
-}
-
-.logo {
-    font-size: 1.6em;
-    color: white;
-    user-select: none;
-    font-family: 'MyLogoFont';
-}
-
-/* Popup wrapper */
-.wrapper {
-    position: relative;
-    width: 400px;
-    height: 520px;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, .5);
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+    background: linear-gradient(135deg, rgba(20, 20, 25, 0.95), rgba(35, 35, 45, 0.95)),
+        url("./images/background.jpg") center/cover no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    transform: scale(0);
-    transition: transform .5s ease, height .2s ease;
 }
 
-.wrapper.active-popup {
-    transform: scale(1);
+.dark-signup-box {
+    width: 450px;
+    max-width: 95%;
+    background-color: rgba(25, 25, 35, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.wrapper.active {
-    height: 600px;
+.nav-link {
+    color: #aaa !important;
+    font-size: 0.9rem;
 }
 
-/* Close icon */
-.wrapper .icon-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 45px;
-    height: 45px;
-    background: white;
-    color: black;
-    font-size: 2em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom-left-radius: 20px;
-    cursor: pointer;
-    z-index: 400;
+.nav-link:hover {
+    color: #fff !important;
 }
 
-/* Login form */
-.wrapper .form-box.login {
-    transition: transform .8s ease;
-    transform: translateX(0);
+.dark-input {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 8px;
 }
 
-.wrapper.active .form-box.login {
-    transition: none;
-    transform: translateX(-400px);
+.dark-input::placeholder {
+    color: #bbb;
 }
 
-/* Register form */
-.wrapper .form-box.register {
-    position: absolute;
-    transform: translateX(400px);
+.dark-input:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    color: #fff;
 }
 
-.wrapper.active .form-box.register {
-    transition: transform .8s ease;
-    transform: translateX(0);
-}
-
-/* Shared form styles */
-.wrapper .form-box {
-    width: 100%;
-    padding: 40px;
-}
-
-.form-box h2 {
-    font-size: 2em;
-    color: white;
-    text-align: center;
-    font-family: 'MyLogoFont';
-}
-
-.input-box {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    border-bottom: 2px solid white;
-    margin: 30px 0;
-}
-
-.input-box label {
-    position: absolute;
-    top: 50%;
-    left: 5px;
-    transform: translateY(-50%);
-    font-size: 1em;
-    color: white;
-    font-weight: 500;
-    pointer-events: none;
-    transition: .5s;
-}
-
-.input-box input:focus~label,
-.input-box input:valid~label {
-    top: -5px;
-}
-
-.input-box input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
+.btn-primary {
+    background-color: #0d6efd;
     border: none;
-    outline: none;
-    font-size: 1em;
-    color: white;
-    font-weight: 600;
-    padding: 0 35px 0 5px;
+    border-radius: 8px;
 }
 
-.input-box .icon {
-    position: absolute;
-    right: 8px;
-    font-size: 1.2em;
-    color: black;
-    line-height: 57px;
+.btn-primary:hover {
+    background-color: #0b5ed7;
 }
 
-.btn {
-    width: 100%;
-    height: 45px;
-    background: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1em;
-    color: black;
-    font-weight: 500;
+.btn-outline-light {
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
 }
 
-.btn:hover {
-    background: white;
-}
-
-.register {
-    font-size: .9em;
-    color: white;
-    text-align: center;
-    font-weight: 500;
-    margin: 25px 0 10px;
-}
-
-.register p a {
-    color: white;
-    font-weight: 600;
-}
-
-.register p a:hover {
-    text-decoration: underline;
-}
-
-/* Responsive */
-@media only screen and (max-width: 768px) {
-    header {
-        padding: 15px;
-    }
-
-    .navigation a {
-        font-size: 0.9em;
-        margin-left: 20px;
-    }
-
-    .navigation .btnlogin {
-        width: 110px;
-        height: 40px;
-        font-size: 0.9em;
-        margin-left: 20px;
-    }
-
-    .logo {
-        font-size: 1.4em;
-    }
-
-    .wrapper {
-        width: 90%;
-        margin-top: 80px;
-    }
-
-    .input-box {
-        margin: 15px 0;
-    }
-
-    .btn {
-        height: 40px;
-        font-size: 0.9em;
-    }
-
-    .register {
-        font-size: 0.8em;
-        margin: 20px 0 10px;
-    }
-}
-
-@font-face {
-    font-family: 'MyLogoFont';
-    src: url('./assets/CloisterBlack.ttf') format('truetype');
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }

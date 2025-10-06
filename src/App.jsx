@@ -1,8 +1,9 @@
-import Authentication from './Authentication'
+
 import Landingpage from './landingpage'
+import Login from './Login'
 function App() {
   return <>
-    <Authentication />
+    <Login />
   </>
 }
 
