@@ -1,5 +1,5 @@
 
-import "./Authentication.css";
+import "./Auth.css";
 
 function Signup() {
 
