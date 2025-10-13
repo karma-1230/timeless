@@ -1,29 +1,28 @@
-function Navbar() {
+import styles from "../Styles/Navbar.module.css";
+
+export default function Navbar() {
   return (
     <div>
-      <div className="bg-black text-white py-1 position-relative overflow-hidden">
+      {/* Top Strip */}
+      <div className={`${styles.topBar} py-1`}>
         <div className="d-flex align-items-center justify-content-center">
-          <i className="bi bi-facebook mx-2"></i>
-          <i className="bi bi-instagram mx-2"></i>
           <marquee className="mx-auto fw-bold">
             CULT OF CYPHER VOLUME I IS OUT NOW!
           </marquee>
         </div>
       </div>
 
-      <div className="bg-white border-bottom py-2">
-        <div className="container d-flex justify-content-between align-items-center">
-
-          <a className="navbar-brand fw-bold text-center mx-auto" href="/">
+      {/* Main Navbar */}
+      <nav className="navbar navbar-expand-lg bg-white border-bottom py-3">
+        <div className="container">
+          {/* Brand */}
+          <a className={`navbar-brand fw-bold ${styles.brand}`} href="/">
             T I M E L E S S
           </a>
-        </div>
-      </div>
 
-      <nav className="navbar navbar-expand-lg bg-white border-bottom">
-        <div className="container">
+          {/* Toggler */}
           <button
-            className="navbar-toggler mx-auto"
+            className="navbar-toggler ms-auto"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#mainNav"
@@ -34,8 +33,9 @@ function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="collapse navbar-collapse" id="mainNav">
-            <ul className="navbar-nav mx-auto text-center">
+          {/* Nav Links */}
+          <div className="collapse navbar-collapse justify-content-center" id="mainNav">
+            <ul className="navbar-nav text-center">
               <li className="nav-item">
                 <a className="nav-link fw-bold text-dark" href="/">
                   Home
@@ -46,6 +46,8 @@ function Navbar() {
                   WINTER SALE
                 </a>
               </li>
+
+              {/* TOPS */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle text-dark"
@@ -68,6 +70,8 @@ function Navbar() {
                   </li>
                 </ul>
               </li>
+
+              {/* BOTTOMS */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle text-dark"
@@ -90,6 +94,8 @@ function Navbar() {
                   </li>
                 </ul>
               </li>
+
+              {/* COLLECTIONS */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle text-dark"
@@ -119,5 +125,3 @@ function Navbar() {
     </div>
   );
 }
-
-export default Navbar;
