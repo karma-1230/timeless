@@ -108,7 +108,7 @@ function ProductsDisplay() {
             <Navbar />
             <div className={styles.wrapper}>
                 <header className={styles.header}>
-                    <h1>STREET AURA VOLUME I</h1>
+                    <h1>TIMELESS COLLECTION</h1>
                     <p>
                         No trends, no validation—just original street identity. “Street Aura” isn’t about fitting in,
                         it’s about standing apart. Wear it if it speaks to you. If not, it was never meant for you.

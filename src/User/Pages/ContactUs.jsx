@@ -50,7 +50,7 @@ function ContactUs() {
 
             {/* Right form */}
             <div className={styles.formSection}>
-                <h2>Karvaan Support</h2>
+                <h2>TIMELESS Support</h2>
                 <p>Leave your message and we’ll get back to you shortly.</p>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
