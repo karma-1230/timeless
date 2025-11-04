@@ -9,7 +9,7 @@ const itemsList = [
         category: "Hoodies",
         price: 7200,
         stock: 8,
-        image: "https://via.placeholder.com/200x250?text=Hoodie",
+        image: "/images/hoodie-1.jpg",
     },
     {
         id: 2,
@@ -17,7 +17,7 @@ const itemsList = [
         category: "T-Shirts",
         price: 3500,
         stock: 15,
-        image: "https://via.placeholder.com/200x250?text=Tee",
+        image: "/images/pant-2.jpg",
     },
     {
         id: 3,
@@ -25,7 +25,7 @@ const itemsList = [
         category: "Pants",
         price: 6400,
         stock: 4,
-        image: "https://via.placeholder.com/200x250?text=Pants",
+        image: "/images/pant-3.jpg",
     },
     {
         id: 4,
@@ -33,7 +33,7 @@ const itemsList = [
         category: "Accessories",
         price: 2800,
         stock: 0,
-        image: "https://via.placeholder.com/200x250?text=Cap",
+        image: "/images/crimson.jpg",
     },
 ];
 
@@ -47,9 +47,10 @@ const ViewItems = () => {
         return matchCategory && matchSearch;
     });
 
-    return (
+    return (<>
+        <Navbar />
         <div className={styles.page}>
-            <Navbar />
+
 
             <main className={styles.main}>
                 <div className={styles.header}>
@@ -113,6 +114,7 @@ const ViewItems = () => {
                 </div>
             </main>
         </div>
+    </>
     );
 };
 

@@ -9,7 +9,7 @@ const Navbar = () => {
 
             <div className={styles.links}>
                 <NavLink
-                    to="/admin/"
+                    to="/admin/dashboard"
                     className={({ isActive }) =>
                         isActive ? `${styles.link} ${styles.active}` : styles.link
                     }
