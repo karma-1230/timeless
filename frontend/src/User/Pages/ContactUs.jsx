@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styles from "../Styles/ContactUs.module.css";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import { sendContactForm } from "../../api";
 
 function ContactUs() {
     // useState → store form input values
@@ -29,7 +30,7 @@ function ContactUs() {
         // example: log and alert message
         console.log("Submitted Data:", formData);
         alert(`Thank you, ${formData.firstName}! We’ll get back to you soon.`);
-
+        sendContactForm();
         // reset form
         setFormData({
             firstName: "",

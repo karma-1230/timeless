@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "../Components/Navbar";
 import styles from "../Styles/UpdateItem.module.css";
+import { updateItem } from "../../api";
 
 const updateSchema = z.object({
     title: z.string().min(2, "Title is required"),
@@ -31,6 +32,7 @@ const UpdateItem = () => {
 
     const onSubmit = (data) => {
         console.log("Updated Item:", data);
+        updateItem();
     };
 
     return (

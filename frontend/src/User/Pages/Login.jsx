@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import styles from "../Styles/Login.module.css";
+import { loginUser } from "../../api";
 
 function Login() {
     const emailRef = useRef(null);
@@ -13,6 +14,7 @@ function Login() {
             email: emailRef.current.value,
             password: passwordRef.current.value,
         };
+        loginUser();
         setUserData(newUser);
         console.log("User data:", newUser);
     };
@@ -24,8 +26,7 @@ function Login() {
                 <div className={styles.header}>
                     <h5 className={styles.brand}>T I M E L E S S</h5>
                     <nav className={styles.nav}>
-                        <a href="#" className={styles.navLink}>Home</a>
-                        <a href="#" className={styles.navLink}>Join</a>
+                        <a href="/" className={styles.navLink}>Home</a>
                     </nav>
                 </div>
 
@@ -33,7 +34,7 @@ function Login() {
                 <h3 className={styles.title}>Login to your account</h3>
                 <p className={styles.subtitle}>
                     Don’t have an account?{" "}
-                    <a href="#" className={styles.link}>Sign Up</a>
+                    <a href="/signup" className={styles.link}>Sign Up</a>
                 </p>
 
                 {/* Form */}

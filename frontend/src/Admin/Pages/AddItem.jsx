@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "../Components/Navbar";
 import styles from "../Styles/AddItem.module.css";
+import { addItem } from "../../api";
 
 const addItemSchema = z.object({
     title: z.string().min(2, "Title is required"),
@@ -24,6 +25,7 @@ const AddItem = () => {
 
     const onSubmit = (data) => {
         console.log("New Item:", data);
+        addItem();
     };
 
     return (

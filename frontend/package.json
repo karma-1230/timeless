@@ -12,6 +12,7 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
+    "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "framer-motion": "^12.23.16",
     "react": "^19.1.1",
