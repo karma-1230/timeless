@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../Styles/ProductsDisplay.module.css";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
+import { getProducts } from "../../api";
 
 const products = [
     {
@@ -103,9 +104,13 @@ const products = [
 ];
 
 function ProductsDisplay() {
+    const handleClick = async () => {
+        await getProducts();
+    }
     return (
         <>
             <Navbar />
+            <button onClick={handleClick} className={styles.btn}></button>
             <div className={styles.wrapper}>
                 <header className={styles.header}>
                     <h1>TIMELESS COLLECTION</h1>

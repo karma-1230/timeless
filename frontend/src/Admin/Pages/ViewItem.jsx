@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Components/Navbar";
 import styles from "../Styles/ViewItems.module.css";
+import { viewItems } from "../../api";
 
 const itemsList = [
     {
@@ -44,13 +45,20 @@ const ViewItems = () => {
     const filteredItems = itemsList.filter((item) => {
         const matchCategory = category === "All" || item.category === category;
         const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
+
         return matchCategory && matchSearch;
+
     });
+
+    const handleClick = async () => {
+        await viewItems();
+    }
 
     return (<>
         <Navbar />
-        <div className={styles.page}>
 
+
+        <div className={styles.page}>
 
             <main className={styles.main}>
                 <div className={styles.header}>
@@ -77,7 +85,7 @@ const ViewItems = () => {
                         />
                     </div>
                 </div>
-
+                <button className={styles.edit} onClick={handleClick}> VIEW BUTTON </button>
                 <div className={styles.grid}>
                     {filteredItems.length > 0 ? (
                         filteredItems.map((item) => (

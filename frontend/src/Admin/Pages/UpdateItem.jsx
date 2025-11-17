@@ -32,7 +32,7 @@ const UpdateItem = () => {
 
     const onSubmit = (data) => {
         console.log("Updated Item:", data);
-        updateItem();
+        updateItem(1);
     };
 
     return (
