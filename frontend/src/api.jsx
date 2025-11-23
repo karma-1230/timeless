@@ -1,40 +1,21 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000/api",
-    headers: {
-        "Content-Type": "application/json",
-    },
+    baseURL: "http://localhost:5000",
 });
 
+// User
+export const loginUser = (data) => api.post("/user/login", data);
+export const signupUser = (data) => api.post("/user/signup", data);
+export const sendContactForm = (data) => api.post("/user/contactus", data);
 
-export const loginUser = () => {
-    return api.post("/login");
-};
+// Products
+export const getProducts = () => api.get("/products"); // fetch all
+export const getProductById = (id) => api.get(`/products/${id}`);
 
-export const signupUser = () => {
-    return api.post("/signup");
-};
-
-export const sendContactForm = () => {
-    return api.post("/contact");
-};
-
-export const getProducts = () => {
-    return api.get("/products");
-};
-
-
-export const addItem = () => {
-    return api.post("/admin/add-item");
-};
-
-export const viewItems = () => {
-    return api.get("/admin/view-items");
-};
-
-export const updateItem = (id) => {
-    return api.put(`/admin/update-item/${id}`);
-};
+// Admin
+export const addItem = (data) => api.post("/admin/item", data);
+export const viewItems = () => api.get("/admin/items");
+export const updateItem = (data) => api.put(`/admin/item/${data.id}`, data);
 
 export default api;

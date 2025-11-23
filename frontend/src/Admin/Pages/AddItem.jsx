@@ -6,12 +6,16 @@ import Navbar from "../Components/Navbar";
 import styles from "../Styles/AddItem.module.css";
 import { addItem } from "../../api";
 
+// ------------------- ZOD SCHEMA -------------------
 const addItemSchema = z.object({
     title: z.string().min(2, "Title is required"),
     category: z.string().min(1, "Please select a category"),
     description: z.string().min(5, "Description must be at least 5 characters"),
     price: z.number().min(1, "Price must be greater than 0"),
     quantity: z.number().min(1, "Quantity must be at least 1"),
+    images: z
+        .any()
+        .refine((files) => files?.length > 0, "At least 1 image is required"),
 });
 
 const AddItem = () => {
@@ -19,13 +23,30 @@ const AddItem = () => {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({
         resolver: zodResolver(addItemSchema),
     });
 
     const onSubmit = (data) => {
-        console.log("New Item:", data);
-        addItem();
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("category", data.category);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("quantity", data.quantity);
+
+        // Append each selected file
+        for (let i = 0; i < data.images.length; i++) {
+            formData.append("images", data.images[i]);
+        }
+
+        addItem(formData)
+            .then((res) => {
+                console.log("Item added:", res.data);
+                reset();
+            })
+            .catch((err) => console.error(err));
     };
 
     return (
@@ -36,12 +57,11 @@ const AddItem = () => {
                 <h1 className={styles.title}>Add New Item</h1>
 
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    {/* Image placeholder */}
-                    <div className={styles.imageBox}>
-                        <div className={styles.placeholder}></div>
-                        <button type="button" className={styles.uploadBtn}>
-                            Upload Image
-                        </button>
+                    {/* Image Upload */}
+                    <div className={styles.inputGroup}>
+                        <label>Upload Images</label>
+                        <input type="file" {...register("images")} multiple />
+                        {errors.images && <p className={styles.error}>{errors.images.message}</p>}
                     </div>
 
                     {/* Title */}
@@ -61,40 +81,28 @@ const AddItem = () => {
                             <option value="Pants">Pants</option>
                             <option value="Accessories">Accessories</option>
                         </select>
-                        {errors.category && (
-                            <p className={styles.error}>{errors.category.message}</p>
-                        )}
+                        {errors.category && <p className={styles.error}>{errors.category.message}</p>}
                     </div>
 
                     {/* Description */}
                     <div className={styles.inputGroup}>
                         <label>Description</label>
                         <textarea rows="4" {...register("description")}></textarea>
-                        {errors.description && (
-                            <p className={styles.error}>{errors.description.message}</p>
-                        )}
+                        {errors.description && <p className={styles.error}>{errors.description.message}</p>}
                     </div>
 
-                    {/* Price and Quantity */}
+                    {/* Price & Quantity */}
                     <div className={styles.row}>
                         <div className={styles.inputGroup}>
                             <label>Price (PKR)</label>
-                            <input
-                                type="number"
-                                {...register("price", { valueAsNumber: true })}
-                            />
+                            <input type="number" {...register("price", { valueAsNumber: true })} />
                             {errors.price && <p className={styles.error}>{errors.price.message}</p>}
                         </div>
 
                         <div className={styles.inputGroup}>
                             <label>Quantity</label>
-                            <input
-                                type="number"
-                                {...register("quantity", { valueAsNumber: true })}
-                            />
-                            {errors.quantity && (
-                                <p className={styles.error}>{errors.quantity.message}</p>
-                            )}
+                            <input type="number" {...register("quantity", { valueAsNumber: true })} />
+                            {errors.quantity && <p className={styles.error}>{errors.quantity.message}</p>}
                         </div>
                     </div>
 

@@ -22,6 +22,7 @@ const UpdateItem = () => {
     } = useForm({
         resolver: zodResolver(updateSchema),
         defaultValues: {
+            id: 1,
             title: "Shadow Hoodie",
             category: "Hoodies",
             description: "Oversized gothic streetwear hoodie with shadow print.",
@@ -32,7 +33,7 @@ const UpdateItem = () => {
 
     const onSubmit = (data) => {
         console.log("Updated Item:", data);
-        updateItem(1);
+        updateItem(data);
     };
 
     return (

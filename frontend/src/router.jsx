@@ -10,6 +10,9 @@ import Signup from "./User/Pages/Signup";
 import Login from "./User/Pages/Login";
 import AboutUs from "./User/Pages/AboutUs";
 import ContactUs from "./User/Pages/ContactUs";
+import Profile from "./User/Pages/Profile";
+import Cart from "./User/Pages/Cart";
+import Checkout from "./User/Pages/Checkout";
 
 
 
@@ -25,6 +28,9 @@ const router = createBrowserRouter([
     { path: "/add-item", element: <AddItem /> },
     { path: "/update-item", element: <UpdateItem /> },
     { path: "/view-items", element: <ViewItems /> },
+    { path: "/profile", element: <Profile /> },
+    { path: "/cart", element: <Cart /> },
+    { path: "/checkout", element: <Checkout /> }
 ])
 
 export default router

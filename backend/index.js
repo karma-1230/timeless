@@ -1,40 +1,33 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import stripeRoutes from "./routes/stripe.js"
 
+
+dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173", // your frontend URL
+}));
 app.use(express.json());
+app.use(cookieParser());
+
+mongoose
+    .connect(process.env.MONGO_URL)
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch((err) => console.log("❌ Mongo Error:", err));
 
 
-app.post("/api/login", (req, res) => {
-    console.log("Login endpoint connected");
-});
+app.use("/user", userRoutes);
+app.use("/admin", adminRoutes);
+app.use("/products", productRoutes);
+app.use("/", stripeRoutes)
 
-app.post("/api/signup", (req, res) => {
-    console.log("Signup endpoint connected");
-});
 
-app.post("/api/contact", (req, res) => {
-    console.log("Contact form connected");
-});
-
-app.get("/api/products", (req, res) => {
-    console.log("Products fetch connected");
-});
-
-// ---------------------- ADMIN ROUTES --------------------------------
-
-app.post("/api/admin/add-item", (req, res) => {
-    console.log("Add item connected");
-});
-
-app.get("/api/admin/view-items", (req, res) => {
-    console.log("View items connected");
-});
-
-app.put("/api/admin/update-item/:id", (req, res) => {
-    console.log(`Update item connected for ID ${req.params.id}`);
-});
 
 // ---------------------- SERVER START --------------------------------
 
