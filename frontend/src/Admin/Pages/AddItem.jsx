@@ -6,47 +6,27 @@ import Navbar from "../Components/Navbar";
 import styles from "../Styles/AddItem.module.css";
 import { addItem } from "../../api";
 
-// ------------------- ZOD SCHEMA -------------------
+// ZOD Schema (images ignored)
 const addItemSchema = z.object({
     title: z.string().min(2, "Title is required"),
     category: z.string().min(1, "Please select a category"),
     description: z.string().min(5, "Description must be at least 5 characters"),
     price: z.number().min(1, "Price must be greater than 0"),
     quantity: z.number().min(1, "Quantity must be at least 1"),
-    images: z
-        .any()
-        .refine((files) => files?.length > 0, "At least 1 image is required"),
 });
 
 const AddItem = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: zodResolver(addItemSchema),
     });
 
     const onSubmit = (data) => {
-        const formData = new FormData();
-        formData.append("title", data.title);
-        formData.append("category", data.category);
-        formData.append("description", data.description);
-        formData.append("price", data.price);
-        formData.append("quantity", data.quantity);
-
-        // Append each selected file
-        for (let i = 0; i < data.images.length; i++) {
-            formData.append("images", data.images[i]);
-        }
-
-        addItem(formData)
-            .then((res) => {
+        addItem(data)
+            .then(res => {
                 console.log("Item added:", res.data);
                 reset();
             })
-            .catch((err) => console.error(err));
+            .catch(err => console.error(err.response?.data || err));
     };
 
     return (

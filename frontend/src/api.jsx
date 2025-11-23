@@ -9,6 +9,16 @@ export const loginUser = (data) => api.post("/user/login", data);
 export const signupUser = (data) => api.post("/user/signup", data);
 export const sendContactForm = (data) => api.post("/user/contactus", data);
 
+export const addToCart = async (productId, token) => {
+    return axios.post(
+        "http://localhost:5000/user/cart",
+        { productId },
+        {
+            headers: { Authorization: `Bearer ${token}` },
+        }
+    );
+};
+
 // Products
 export const getProducts = () => api.get("/products"); // fetch all
 export const getProductById = (id) => api.get(`/products/${id}`);

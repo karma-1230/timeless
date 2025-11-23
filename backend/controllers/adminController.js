@@ -1,13 +1,9 @@
 import Admin from "../models/Admin.js";
 import Product from "../models/Product.js";
 import bcrypt from "bcryptjs";
-import multer from "multer";
 import jwt from "jsonwebtoken";
 
-// --------------------
-// Multer setup
-// --------------------
-const upload = multer({ storage: multer.memoryStorage() });
+
 
 // --------------------
 // Add Item with Images
@@ -16,20 +12,20 @@ export const addItem = async (req, res) => {
     try {
         const { title, category, description, price, quantity } = req.body;
 
-        // Create new product
-        const newProduct = new Product({
+        // Convert numbers if they come as strings
+        const product = new Product({
             title,
             category,
             description,
-            price,
-            quantity,
+            price: Number(price),
+            quantity: Number(quantity),
         });
 
-        await newProduct.save();
-        res.status(201).json({ message: "Product added", product: newProduct });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error" });
+        await product.save();
+        res.status(201).json({ message: "Product added successfully", product });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ error: error.message });
     }
 };
 

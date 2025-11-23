@@ -14,7 +14,6 @@ app.use(cors({
     origin: "http://localhost:5173", // your frontend URL
 }));
 app.use(express.json());
-app.use(cookieParser());
 
 mongoose
     .connect(process.env.MONGO_URL)
@@ -25,7 +24,7 @@ mongoose
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/products", productRoutes);
-app.use("/", stripeRoutes)
+app.use("/order", stripeRoutes)
 
 
 

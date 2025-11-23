@@ -13,6 +13,7 @@ import ContactUs from "./User/Pages/ContactUs";
 import Profile from "./User/Pages/Profile";
 import Cart from "./User/Pages/Cart";
 import Checkout from "./User/Pages/Checkout";
+import CheckoutSuccess from "./User/Pages/CheckoutSuccess";
 
 
 
@@ -30,7 +31,8 @@ const router = createBrowserRouter([
     { path: "/view-items", element: <ViewItems /> },
     { path: "/profile", element: <Profile /> },
     { path: "/cart", element: <Cart /> },
-    { path: "/checkout", element: <Checkout /> }
+    { path: "/checkout", element: <Checkout /> },
+    { path: "/checkout/success", element: <CheckoutSuccess /> }
 ])
 
 export default router

@@ -36,21 +36,30 @@ export default function Checkout() {
         try {
             const token = localStorage.getItem("token");
 
+            // Transform cart for Stripe
+            const lineItems = user.cart
+                .filter(item => item.product) // skip missing products
+                .map(item => ({
+                    name: item.product.title,
+                    description: item.product.description,
+                    amount: item.product.price * 100, // Stripe expects cents
+                    currency: "usd", // or "pkr" if supported
+                    quantity: item.quantity,
+                }));
+
             const res = await axios.post(
                 "http://localhost:5000/order/create-checkout-session",
-                { cart: user.cart },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
+                { lineItems },
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            // Redirect to Stripe Checkout
             window.location.href = res.data.url;
         } catch (err) {
-            console.error(err);
+            console.error(err.response?.data || err);
             alert("Error creating checkout session.");
         }
     };
+
 
     if (loading) return <p>Loading...</p>;
     if (!user) return <p>Please log in to checkout.</p>;
