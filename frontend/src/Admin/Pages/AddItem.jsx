@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "../Components/Navbar";
 import styles from "../Styles/AddItem.module.css";
 import { addItem } from "../../api";
+import { useNavigate } from "react-router-dom";
+
 
 // ZOD Schema (images ignored)
 const addItemSchema = z.object({
@@ -16,6 +18,39 @@ const addItemSchema = z.object({
 });
 
 const AddItem = () => {
+
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [auth, setAuth] = useState(true);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        // No token → redirect to login
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+
+            // If role is not admin → go to not authorized page
+            if (payload.role !== "admin") {
+                setAuth(false);
+                return;
+            }
+
+            // Allow page to load
+            setLoading(false);
+
+        } catch (error) {
+            navigate("/login");
+        }
+    }, [navigate]);
+
+
+
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: zodResolver(addItemSchema),
     });
@@ -28,6 +63,9 @@ const AddItem = () => {
             })
             .catch(err => console.error(err.response?.data || err));
     };
+
+    if (loading && auth) return <p>Checking access...</p>;
+    if (!auth) return <p>UNAUTHORIZED</p>
 
     return (
         <div className={styles.page}>

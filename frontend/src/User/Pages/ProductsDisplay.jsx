@@ -29,7 +29,7 @@ function ProductsDisplay() {
         getProducts()
             .then((res) => {
                 console.log(res.data);
-                setAllProducts([...staticProducts, ...res.data]); // merge static + DB products
+                setAllProducts([...staticProducts, res.data]); // merge static + DB products
             })
             .catch((err) => console.error(err));
         console.log(allProducts);

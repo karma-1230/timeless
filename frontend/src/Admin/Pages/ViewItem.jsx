@@ -1,58 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import styles from "../Styles/ViewItems.module.css";
-import { viewItems } from "../../api";
+import { fetchItems, deleteItem } from "../../api";
+import { useNavigate } from "react-router-dom";
 
-const itemsList = [
-    {
-        id: 1,
-        name: "Shadowed Hoodie",
-        category: "Hoodies",
-        price: 7200,
-        stock: 8,
-        image: "/images/hoodie-1.jpg",
-    },
-    {
-        id: 2,
-        name: "Crimson Oversized Tee",
-        category: "T-Shirts",
-        price: 3500,
-        stock: 15,
-        image: "/images/pant-2.jpg",
-    },
-    {
-        id: 3,
-        name: "Chain Cargo Pants",
-        category: "Pants",
-        price: 6400,
-        stock: 4,
-        image: "/images/pant-3.jpg",
-    },
-    {
-        id: 4,
-        name: "Dark Velvet Cap",
-        category: "Accessories",
-        price: 2800,
-        stock: 0,
-        image: "/images/crimson.jpg",
-    },
+// Dummy fallback data
+const dummyItems = [
+    { _id: 1, title: "Shadowed Hoodie", category: "Hoodies", price: 7200, stock: 8, image: "/images/hoodie-1.jpg" },
+    { _id: 2, title: "Crimson Oversized Tee", category: "T-Shirts", price: 3500, stock: 15, image: "/images/pant-2.jpg" },
+    { _id: 3, title: "Chain Cargo Pants", category: "Pants", price: 6400, stock: 4, image: "/images/pant-3.jpg" },
+    { _id: 4, title: "Dark Velvet Cap", category: "Accessories", price: 2800, stock: 0, image: "/images/crimson.jpg" },
 ];
 
 const ViewItems = () => {
+    const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(true);
+    const [auth, setAuth] = useState(true);
+
+    const [items, setItems] = useState(dummyItems);   // show dummy items first
     const [category, setCategory] = useState("All");
     const [search, setSearch] = useState("");
 
-    const filteredItems = itemsList.filter((item) => {
+    // ---------------- ADMIN AUTH CHECK ----------------
+    useEffect(() => {
+        const loadItems = async () => {
+            try {
+                const res = await fetchItems();
+                console.log(res.data);
+                setItems([...res.data, ...dummyItems]);
+                console.log(items); // replace dummy items with real items
+            } catch (err) {
+                console.log("Backend not responding, showing dummy items.");
+            }
+        };
+
+        loadItems();
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+
+            if (payload.role !== "admin") {
+                setAuth(false);
+                return;
+            }
+
+            setAuth(true);
+            setLoading(false);
+        } catch (err) {
+            navigate("/login");
+        }
+    }, [navigate]);
+
+    if (loading) return <p>Checking access...</p>;
+    if (!auth) return <p>UNAUTHORIZED</p>;
+
+    // ---------------- FETCH REAL ITEMS ----------------
+
+    // ---------------- DELETE ITEM ----------------
+    const handleDelete = async (item) => {
+        if (!window.confirm("Are you sure you want to delete this item?")) return;
+
+        try {
+            await deleteItem(item._id);
+
+            // update UI
+            setItems((prev) => prev.filter((i) => i._id !== _id));
+
+            alert("Item deleted!");
+        } catch (err) {
+            alert("Error deleting item.");
+        }
+    };
+
+    // ---------------- FILTERING ----------------
+    const filteredItems = items.filter((item) => {
         const matchCategory = category === "All" || item.category === category;
-        const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
-
+        const matchSearch = item.title.toLowerCase().includes(search.toLowerCase());
         return matchCategory && matchSearch;
-
     });
-
-    const handleClick = async () => {
-        await viewItems();
-    }
 
     return (<>
         <Navbar />
@@ -85,14 +117,13 @@ const ViewItems = () => {
                         />
                     </div>
                 </div>
-                <button className={styles.edit} onClick={handleClick}> VIEW BUTTON </button>
                 <div className={styles.grid}>
                     {filteredItems.length > 0 ? (
                         filteredItems.map((item) => (
-                            <div key={item.id} className={styles.card}>
-                                <img src={item.image} alt={item.name} className={styles.image} />
+                            <div key={item._id} className={styles.card}>
+                                <img src={item.image} alt={item.title} className={styles.image} />
                                 <div className={styles.info}>
-                                    <h3>{item.name}</h3>
+                                    <h3>{item.title}</h3>
                                     <p className={styles.category}>{item.category}</p>
                                     <p className={styles.price}>PKR {item.price}</p>
                                     <p
@@ -112,7 +143,7 @@ const ViewItems = () => {
                                 </div>
                                 <div className={styles.actions}>
                                     <button className={styles.edit}>Edit</button>
-                                    <button className={styles.delete}>Delete</button>
+                                    <button onClick={() => handleDelete(item)} className={styles.delete}>Delete</button>
                                 </div>
                             </div>
                         ))

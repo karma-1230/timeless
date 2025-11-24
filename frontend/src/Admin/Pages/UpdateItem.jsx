@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "../Components/Navbar";
 import styles from "../Styles/UpdateItem.module.css";
 import { updateItem } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 const updateSchema = z.object({
     title: z.string().min(2, "Title is required"),
@@ -15,6 +16,40 @@ const updateSchema = z.object({
 });
 
 const UpdateItem = () => {
+
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [auth, setAuth] = useState(true);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        // No token → redirect to login
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+
+            // If role is not admin → go to not authorized page
+            if (payload.role !== "admin") {
+                setAuth(false);
+                return;
+            }
+
+            // Allow page to load
+            setLoading(false);
+
+        } catch (error) {
+            navigate("/login");
+        }
+    }, [navigate]);
+
+    if (loading && auth) return <p>Checking access...</p>;
+    if (!auth) return <p>UNAUTHORIZED</p>
+
     const {
         register,
         handleSubmit,
