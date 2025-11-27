@@ -4,40 +4,31 @@ import styles from "../Styles/ViewItems.module.css";
 import { fetchItems, deleteItem } from "../../api";
 import { useNavigate } from "react-router-dom";
 
-// Dummy fallback data
-const dummyItems = [
-    { _id: 1, title: "Shadowed Hoodie", category: "Hoodies", price: 7200, stock: 8, image: "/images/hoodie-1.jpg" },
-    { _id: 2, title: "Crimson Oversized Tee", category: "T-Shirts", price: 3500, stock: 15, image: "/images/pant-2.jpg" },
-    { _id: 3, title: "Chain Cargo Pants", category: "Pants", price: 6400, stock: 4, image: "/images/pant-3.jpg" },
-    { _id: 4, title: "Dark Velvet Cap", category: "Accessories", price: 2800, stock: 0, image: "/images/crimson.jpg" },
-];
-
 const ViewItems = () => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
     const [auth, setAuth] = useState(true);
 
-    const [items, setItems] = useState(dummyItems);   // show dummy items first
+    const [items, setItems] = useState([]);
     const [category, setCategory] = useState("All");
     const [search, setSearch] = useState("");
 
-    // ---------------- ADMIN AUTH CHECK ----------------
+    // ---------------- ADMIN AUTH + LOAD ITEMS ----------------
     useEffect(() => {
         const loadItems = async () => {
             try {
                 const res = await fetchItems();
-                console.log(res.data);
-                setItems([...res.data, ...dummyItems]);
-                console.log(items); // replace dummy items with real items
+                console.log("Fetched items:", res.data);
+                setItems(res.data);   // ONLY REAL ITEMS
             } catch (err) {
-                console.log("Backend not responding, showing dummy items.");
+                console.log("Error fetching items:", err);
             }
         };
 
         loadItems();
-        const token = localStorage.getItem("token");
 
+        const token = localStorage.getItem("token");
         if (!token) {
             navigate("/login");
             return;
@@ -61,8 +52,6 @@ const ViewItems = () => {
     if (loading) return <p>Checking access...</p>;
     if (!auth) return <p>UNAUTHORIZED</p>;
 
-    // ---------------- FETCH REAL ITEMS ----------------
-
     // ---------------- DELETE ITEM ----------------
     const handleDelete = async (item) => {
         if (!window.confirm("Are you sure you want to delete this item?")) return;
@@ -71,7 +60,7 @@ const ViewItems = () => {
             await deleteItem(item._id);
 
             // update UI
-            setItems((prev) => prev.filter((i) => i._id !== _id));
+            setItems((prev) => prev.filter((i) => i._id !== item._id));
 
             alert("Item deleted!");
         } catch (err) {
@@ -86,74 +75,93 @@ const ViewItems = () => {
         return matchCategory && matchSearch;
     });
 
-    return (<>
-        <Navbar />
+    return (
+        <>
+            <Navbar />
 
+            <div className={styles.page}>
+                <main className={styles.main}>
 
-        <div className={styles.page}>
+                    <div className={styles.header}>
+                        <h1>Manage Store Items</h1>
 
-            <main className={styles.main}>
-                <div className={styles.header}>
-                    <h1>Manage Store Items</h1>
-                    <div className={styles.filters}>
-                        <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className={styles.dropdown}
-                        >
-                            <option value="All">All Categories</option>
-                            <option value="Hoodies">Hoodies</option>
-                            <option value="T-Shirts">T-Shirts</option>
-                            <option value="Pants">Pants</option>
-                            <option value="Accessories">Accessories</option>
-                        </select>
+                        <div className={styles.filters}>
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className={styles.dropdown}
+                            >
+                                <option value="All">All Categories</option>
+                                <option value="Hoodies">Hoodies</option>
+                                <option value="T-Shirts">T-Shirts</option>
+                                <option value="Pants">Pants</option>
+                                <option value="Accessories">Accessories</option>
+                            </select>
 
-                        <input
-                            type="text"
-                            placeholder="Search item..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className={styles.search}
-                        />
+                            <input
+                                type="text"
+                                placeholder="Search item..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className={styles.search}
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className={styles.grid}>
-                    {filteredItems.length > 0 ? (
-                        filteredItems.map((item) => (
-                            <div key={item._id} className={styles.card}>
-                                <img src={item.image} alt={item.title} className={styles.image} />
-                                <div className={styles.info}>
-                                    <h3>{item.title}</h3>
-                                    <p className={styles.category}>{item.category}</p>
-                                    <p className={styles.price}>PKR {item.price}</p>
-                                    <p
-                                        className={`${styles.stock} ${item.stock === 0
-                                            ? styles.out
-                                            : item.stock <= 5
-                                                ? styles.low
-                                                : styles.in
-                                            }`}
-                                    >
-                                        {item.stock === 0
-                                            ? "Out of Stock"
-                                            : item.stock <= 5
-                                                ? "Low Stock"
-                                                : "In Stock"}
-                                    </p>
+
+                    <div className={styles.grid}>
+                        {filteredItems.length > 0 ? (
+                            filteredItems.map((item) => (
+                                <div key={item._id} className={styles.card}>
+                                    <img
+                                        src={
+                                            item.image
+                                                ? `http://localhost:5000${item.image}`
+                                                : "/placeholder.jpg"
+                                        }
+                                        alt={item.title}
+                                        className={styles.image}
+                                    />
+
+                                    <div className={styles.info}>
+                                        <h3>{item.title}</h3>
+                                        <p className={styles.category}>{item.category}</p>
+
+                                        <p className={styles.price}>PKR {item.price}</p>
+
+                                        <p
+                                            className={`${styles.stock} ${item.quantity === 0
+                                                ? styles.out
+                                                : item.quantity <= 5
+                                                    ? styles.low
+                                                    : styles.in
+                                                }`}
+                                        >
+                                            {item.quantity === 0
+                                                ? "Out of Stock"
+                                                : item.quantity <= 5
+                                                    ? "Low Stock"
+                                                    : "In Stock"}
+                                        </p>
+                                    </div>
+
+                                    <div className={styles.actions}>
+                                        <button onClick={() => navigate(`/update-item/${item._id}`)} className={styles.edit}>Edit</button>
+                                        <button
+                                            onClick={() => handleDelete(item)}
+                                            className={styles.delete}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className={styles.actions}>
-                                    <button className={styles.edit}>Edit</button>
-                                    <button onClick={() => handleDelete(item)} className={styles.delete}>Delete</button>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className={styles.noItems}>No items found.</p>
-                    )}
-                </div>
-            </main>
-        </div>
-    </>
+                            ))
+                        ) : (
+                            <p className={styles.noItems}>No items found.</p>
+                        )}
+                    </div>
+                </main>
+            </div>
+        </>
     );
 };
 

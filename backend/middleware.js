@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import multer from "multer";
+import path from "path";
 
 export const verifyUser = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -16,6 +18,7 @@ export const verifyUser = (req, res, next) => {
 
 export const verifyAdmin = (req, res, next) => {
     try {
+        console.log("here")
         const token = req.headers.authorization?.split(" ")[1];
 
         if (!token) return res.status(401).json({ message: "No token provided" });
@@ -32,3 +35,25 @@ export const verifyAdmin = (req, res, next) => {
         return res.status(401).json({ message: "Invalid token" });
     }
 };
+
+
+// Storage engine
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/");  // /uploads folder
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+
+// File filter (optional)
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) cb(null, true);
+    else cb(new Error("Only images allowed"), false);
+};
+
+export const upload = multer({
+    storage,
+    fileFilter,
+});

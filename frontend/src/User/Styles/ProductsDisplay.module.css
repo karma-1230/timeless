@@ -94,7 +94,8 @@
 .oldPrice {
     text-decoration: line-through;
     color: #999;
-    margin-right: 6px;
+    margin-right: 10px;
+    margin-left: 30px;
 }
 
 .btn {

@@ -1,8 +1,15 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "../Styles/Navbar.module.css";
 
 const Navbar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
     return (
         <nav className={styles.navbar}>
             <div className={styles.logo}>TIMELESS</div>
@@ -35,14 +42,14 @@ const Navbar = () => {
                     Orders
                 </NavLink>
 
-                <NavLink
-                    to="/admin/settings"
-                    className={({ isActive }) =>
-                        isActive ? `${styles.link} ${styles.active}` : styles.link
-                    }
+                {/* Logout styled like a link */}
+                <button
+                    onClick={handleLogout}
+                    className={styles.link}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
                 >
-                    Settings
-                </NavLink>
+                    Logout
+                </button>
             </div>
         </nav>
     );

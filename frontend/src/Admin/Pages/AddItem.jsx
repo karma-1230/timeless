@@ -7,26 +7,36 @@ import styles from "../Styles/AddItem.module.css";
 import { addItem } from "../../api";
 import { useNavigate } from "react-router-dom";
 
-
-// ZOD Schema (images ignored)
+// ---------------- Zod Schema ----------------
 const addItemSchema = z.object({
     title: z.string().min(2, "Title is required"),
     category: z.string().min(1, "Please select a category"),
     description: z.string().min(5, "Description must be at least 5 characters"),
     price: z.number().min(1, "Price must be greater than 0"),
     quantity: z.number().min(1, "Quantity must be at least 1"),
+    image: z.any().optional(), // allow image to be optional
 });
 
 const AddItem = () => {
-
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [auth, setAuth] = useState(true);
+    const [preview, setPreview] = useState(null); // for image preview
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        watch,
+    } = useForm({
+        resolver: zodResolver(addItemSchema),
+    });
+
+    // ---------------- AUTH CHECK ----------------
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        // No token → redirect to login
         if (!token) {
             navigate("/login");
             return;
@@ -35,37 +45,62 @@ const AddItem = () => {
         try {
             const payload = JSON.parse(atob(token.split(".")[1]));
 
-            // If role is not admin → go to not authorized page
             if (payload.role !== "admin") {
                 setAuth(false);
                 return;
             }
 
-            // Allow page to load
+            setAuth(true);
             setLoading(false);
-
         } catch (error) {
             navigate("/login");
         }
     }, [navigate]);
 
+    // ---------------- IMAGE PREVIEW ----------------
+    const imageFile = watch("image");
+    useEffect(() => {
+        if (imageFile && imageFile[0]) {
+            const objectUrl = URL.createObjectURL(imageFile[0]);
+            setPreview(objectUrl);
 
+            return () => URL.revokeObjectURL(objectUrl); // cleanup
+        } else {
+            setPreview(null);
+        }
+    }, [imageFile]);
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
-        resolver: zodResolver(addItemSchema),
-    });
-
+    // ---------------- FORM SUBMIT ----------------
     const onSubmit = (data) => {
-        addItem(data)
-            .then(res => {
+        const formData = new FormData();
+
+        // Add single image
+        if (data.image && data.image[0]) {
+            formData.append("image", data.image[0]); // match backend field
+        }
+
+        // Add other fields
+        formData.append("title", data.title);
+        formData.append("category", data.category);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("quantity", data.quantity);
+
+        addItem(formData)
+            .then((res) => {
                 console.log("Item added:", res.data);
+                alert("Item added successfully!");
                 reset();
+                setPreview(null);
             })
-            .catch(err => console.error(err.response?.data || err));
+            .catch((err) => {
+                console.error(err);
+                alert("Error adding item.");
+            });
     };
 
     if (loading && auth) return <p>Checking access...</p>;
-    if (!auth) return <p>UNAUTHORIZED</p>
+    if (!auth) return <p>UNAUTHORIZED</p>;
 
     return (
         <div className={styles.page}>
@@ -77,9 +112,14 @@ const AddItem = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     {/* Image Upload */}
                     <div className={styles.inputGroup}>
-                        <label>Upload Images</label>
-                        <input type="file" {...register("images")} multiple />
-                        {errors.images && <p className={styles.error}>{errors.images.message}</p>}
+                        <label>Upload Image</label>
+                        <input type="file" {...register("image")} accept="image/*" />
+                        {errors.image && <p className={styles.error}>{errors.image.message}</p>}
+                        {preview && (
+                            <div className={styles.preview}>
+                                <img src={preview} alt="Preview" className={styles.previewImage} />
+                            </div>
+                        )}
                     </div>
 
                     {/* Title */}

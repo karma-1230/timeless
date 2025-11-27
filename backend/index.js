@@ -25,6 +25,9 @@ app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/products", productRoutes);
 app.use("/order", stripeRoutes)
+import path from "path";
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 
 

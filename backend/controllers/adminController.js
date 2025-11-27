@@ -12,13 +12,15 @@ export const addItem = async (req, res) => {
     try {
         const { title, category, description, price, quantity } = req.body;
 
-        // Convert numbers if they come as strings
+        const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
         const product = new Product({
             title,
             category,
             description,
             price: Number(price),
             quantity: Number(quantity),
+            image: imagePath,
         });
 
         await product.save();
@@ -28,6 +30,8 @@ export const addItem = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+
 
 
 // --------------------
@@ -71,11 +75,30 @@ export const getItems = async (req, res) => {
 export const updateItem = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true });
-        res.status(200).json({ message: "Product updated", product: updatedProduct });
+        const { title, category, description, price, quantity } = req.body;
+
+        // Find the product first
+        const product = await Product.findById(id);
+        if (!product) return res.status(404).json({ message: "Item not found" });
+
+        // Update fields
+        product.title = title;
+        product.category = category;
+        product.description = description;
+        product.price = Number(price);
+        product.quantity = Number(quantity);
+
+        // If new image uploaded, replace it
+        if (req.file) {
+            product.image = `/uploads/${req.file.filename}`;
+        }
+
+        await product.save();
+
+        res.status(200).json({ message: "Item updated successfully", product });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Failed to update item", error: err.message });
     }
 };
 

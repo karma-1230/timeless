@@ -1,18 +1,37 @@
 import { useState, useEffect } from "react";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
 import styles from "../Styles/Navbar.module.css";
+import axios from "axios";
 
 export default function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    setLoggedIn(!!localStorage.getItem("token"));
-  }, []);
+    setLoggedIn(!!token);
+
+    // Fetch user cart if logged in
+    if (token) {
+      axios
+        .get("http://localhost:5000/user/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          const cart = res.data.user?.cart || [];
+          // Sum up quantity of each cart item
+          const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 0), 0);
+          setCartCount(totalItems);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // remove JWT
-    setLoggedIn(false);               // update UI
-    window.location.href = "/";       // redirect home (optional)
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    window.location.href = "/";
   };
 
   return (
@@ -29,7 +48,6 @@ export default function Navbar() {
       {/* Main Navbar */}
       <nav className="navbar navbar-expand-lg bg-white border-bottom py-3">
         <div className="container">
-
           {/* Brand */}
           <a className={`navbar-brand fw-bold ${styles.brand}`} href="/">
             T I M E L E S S
@@ -52,7 +70,6 @@ export default function Navbar() {
                 <a className="nav-link text-dark" href="/winter-sale">WINTER SALE</a>
               </li>
 
-              {/* TOPS */}
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
                   TOPS
@@ -63,7 +80,6 @@ export default function Navbar() {
                 </ul>
               </li>
 
-              {/* BOTTOMS */}
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
                   BOTTOMS
@@ -74,7 +90,6 @@ export default function Navbar() {
                 </ul>
               </li>
 
-              {/* COLLECTIONS */}
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
                   COLLECTIONS
@@ -90,17 +105,17 @@ export default function Navbar() {
             <ul className="navbar-nav ms-auto d-flex align-items-center">
               {loggedIn ? (
                 <>
-                  {/* Cart */}
                   <li className="nav-item me-3">
-                    <a className="nav-link text-dark position-relative" href="/cart">
+                    <a className="nav-link text-dark position-relative" href="/checkout">
                       <FaShoppingCart size={20} />
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        2
-                      </span>
+                      {cartCount > 0 && (
+                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          {cartCount}
+                        </span>
+                      )}
                     </a>
                   </li>
 
-                  {/* Profile Dropdown */}
                   <li className="nav-item dropdown">
                     <a
                       className="nav-link dropdown-toggle text-dark d-flex align-items-center"

@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     description: String,
     category: String,          // e.g., hoodie, tee, jacket
-    images: [String],          // multiple image URLs
+    image: String,          // multiple image URLs
     quantity: { type: Number, default: 0 },
     discount: { type: Number, default: 0 }, // percentage discount
     ratings: [ratingSchema],

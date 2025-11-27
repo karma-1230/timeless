@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../Styles/Checkout.module.css";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 
 export default function Checkout() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Fetch user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -31,19 +32,18 @@ export default function Checkout() {
     }, []);
 
     const handleOrderNow = async () => {
-        if (!user || !user.cart || user.cart.length === 0) return;
+        if (!user?.cart || user.cart.length === 0) return;
 
         try {
             const token = localStorage.getItem("token");
 
-            // Transform cart for Stripe
             const lineItems = user.cart
-                .filter(item => item.product) // skip missing products
                 .map(item => ({
+                    productId: item.product._id,
                     name: item.product.title,
                     description: item.product.description,
-                    amount: item.product.price * 100, // Stripe expects cents
-                    currency: "usd", // or "pkr" if supported
+                    amount: item.product.price * 100,
+                    currency: "pkr",
                     quantity: item.quantity,
                 }));
 
@@ -60,16 +60,16 @@ export default function Checkout() {
         }
     };
 
-
-    if (loading) return <p>Loading...</p>;
-    if (!user) return <p>Please log in to checkout.</p>;
+    if (loading) return <p style={{ textAlign: "center", marginTop: "100px" }}>Loading...</p>;
+    if (!user) return <p style={{ textAlign: "center", marginTop: "100px" }}>Please log in to checkout.</p>;
 
     const totalPrice = user.cart?.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
+        (acc, item) => acc + (item.product?.price || 0) * item.quantity,
         0
     );
 
-    return (
+    return (<>
+        <Navbar />
         <div className={styles.container}>
             <h2 className={styles.title}>Checkout</h2>
 
@@ -79,24 +79,24 @@ export default function Checkout() {
                         {user.cart.map((item, idx) => (
                             <div key={idx} className={styles.cartItem}>
                                 <img
-                                    src={item.product.images[0]}
-                                    alt={item.product.title}
+                                    src={`http://localhost:5000${item.product?.image}`}
+                                    alt={item.product?.title}
                                     className={styles.image}
                                 />
                                 <div className={styles.details}>
-                                    <h5>{item.product.title}</h5>
+                                    <h5>{item.product?.title}</h5>
                                     <p>Quantity: {item.quantity}</p>
-                                    <p>Price: ${item.product.price}</p>
-                                    <p>Subtotal: ${item.product.price * item.quantity}</p>
+                                    <p>Price: PKR {item.product?.price}</p>
+                                    <p>Subtotal: PKR {(item.product?.price || 0) * item.quantity}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
 
                     <div className={styles.summary}>
-                        <h4>Total: ${totalPrice}</h4>
+                        <h4>Total: PKR {totalPrice}</h4>
                         <button className={styles.orderBtn} onClick={handleOrderNow}>
-                            Order Now
+                            Checkout
                         </button>
                     </div>
                 </>
@@ -104,5 +104,7 @@ export default function Checkout() {
                 <p>Your cart is empty.</p>
             )}
         </div>
+        <Footer />
+    </>
     );
 }

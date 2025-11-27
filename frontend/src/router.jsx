@@ -14,6 +14,8 @@ import Profile from "./User/Pages/Profile";
 import Cart from "./User/Pages/Cart";
 import Checkout from "./User/Pages/Checkout";
 import CheckoutSuccess from "./User/Pages/CheckoutSuccess";
+import ProductDescription from "./User/Pages/ProductDescription";
+import Orders from "./User/Pages/Orders";
 
 
 
@@ -27,12 +29,14 @@ const router = createBrowserRouter([
     { path: "/admin/dashboard", element: <Dashboard /> },
     { path: "/admin/manage-items", element: <ManageItems /> },
     { path: "/add-item", element: <AddItem /> },
-    { path: "/update-item", element: <UpdateItem /> },
+    { path: "/update-item/:id", element: <UpdateItem /> },
     { path: "/view-items", element: <ViewItems /> },
     { path: "/profile", element: <Profile /> },
     { path: "/cart", element: <Cart /> },
     { path: "/checkout", element: <Checkout /> },
-    { path: "/checkout/success", element: <CheckoutSuccess /> }
+    { path: "/checkout/success", element: <CheckoutSuccess /> },
+    { path: "/product/:id", element: <ProductDescription /> },
+    { path: "/orders", element: <Orders /> }
 ])
 
 export default router
