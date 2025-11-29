@@ -69,7 +69,7 @@ export const addItem = (data) => {
 
 export const updateItem = (id, data) => api.put(`/admin/item/${id}`, data, {
     headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "multipart/form-data"
     },
 });
